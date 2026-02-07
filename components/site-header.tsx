@@ -7,6 +7,7 @@ import { Menu, X, ShoppingCart } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { CartDrawer } from "@/components/cart-drawer";
 import { Container } from "@/components/container";
+import Image from "next/image";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -25,7 +26,13 @@ export function SiteHeader() {
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
         <Container className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-lg font-semibold tracking-tight">Shilpini</span>
+            <Image
+              src={'/logo/Logo-png-01.png'}
+              alt="Logo"
+              width={100}
+              height={100}
+              className="w-20 md:w-22"
+            />
           </Link>
 
           {/* Desktop nav */}
@@ -70,55 +77,55 @@ export function SiteHeader() {
           </div>
         </Container>
 
-      {/* Mobile overlay drawer */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-9999 flex justify-end bg-background lg:hidden"
-            onClick={() => setOpen(false)}
-          >
-            <motion.nav
-              initial={{ x: "100%", opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: "100%", opacity: 0 }}
-              transition={{ duration: 0.22 }}
-              className="flex h-screen w-72 max-w-[80vw] flex-col border-l bg-background px-4 py-6 shadow-xl sm:w-80 sm:px-6"
-              onClick={(e) => e.stopPropagation()}
+        {/* Mobile overlay drawer */}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className="fixed inset-0 z-9999 flex justify-end bg-background lg:hidden"
+              onClick={() => setOpen(false)}
             >
-              <div className="mb-4 flex items-center justify-between">
-                <span className="text-sm font-semibold tracking-wide uppercase text-muted-foreground">
-                  Menu
-                </span>
-                <button
-                  type="button"
-                  aria-label="Close navigation"
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border text-foreground"
-                  onClick={() => setOpen(false)}
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-
-              <div className="mt-4 flex flex-1 flex-col gap-2 overflow-y-auto text-base font-medium">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="rounded-lg px-3 py-2 text-foreground/85 hover:bg-muted hover:text-foreground"
+              <motion.nav
+                initial={{ x: '100%', opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: '100%', opacity: 0 }}
+                transition={{ duration: 0.22 }}
+                className="flex h-screen w-72 max-w-[80vw] flex-col border-l bg-background px-4 py-6 shadow-xl sm:w-80 sm:px-6"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="mb-4 flex items-center justify-between">
+                  <span className="text-sm font-semibold tracking-wide uppercase text-muted-foreground">
+                    Menu
+                  </span>
+                  <button
+                    type="button"
+                    aria-label="Close navigation"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full border text-foreground"
                     onClick={() => setOpen(false)}
                   >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </motion.nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="mt-4 flex flex-1 flex-col gap-2 overflow-y-auto text-base font-medium">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="rounded-lg px-3 py-2 text-foreground/85 hover:bg-muted hover:text-foreground"
+                      onClick={() => setOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </motion.nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Cart Drawer */}

@@ -1,12 +1,13 @@
-"use server";
+'use server';
 
-import { prisma } from "../prisma";
+import { prisma } from '../prisma';
 
 export async function getProductById(id: string) {
   const product = await prisma.product.findUnique({
     where: { id },
     include: {
       category: true,
+      options: true,
     },
   });
 
@@ -20,7 +21,7 @@ export async function getProductReviews(productId: string) {
       isApproved: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
     take: 20,
   });
@@ -31,7 +32,7 @@ export async function getProductReviews(productId: string) {
 export async function getRelatedProducts(
   categoryId: string | null,
   currentProductId: string,
-  take: number = 4
+  take: number = 4,
 ) {
   if (!categoryId) return [];
 
@@ -44,7 +45,7 @@ export async function getRelatedProducts(
       },
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
     take,
     include: {

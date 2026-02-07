@@ -67,6 +67,8 @@ model Product {
   updatedAt   DateTime @updatedAt
 
   category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  options     ProductOption[]
+  orderItems  OrderItem[]
 
   @@index([categoryId])
   @@index([isActive])
@@ -74,6 +76,18 @@ model Product {
   @@index([order])
   @@index([collections], type: Gin)
   @@map("products")
+}
+
+model ProductOption {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  name      String
+  values    String[]
+
+  @@index([productId])
+  @@map("product_options")
 }
 
 enum ProductCollection {
@@ -121,4 +135,89 @@ model SliderContent {
   @@index([isActive])
   @@index([order])
   @@map("slider_contents")
+}
+
+// Order Model
+model Order {
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique // A human-readable ID (e.g., ORD-1001)
+  
+  // Customer Details
+  customerName  String
+  customerPhone String
+  address       String      @db.Text
+  
+  // Order Status
+  status        OrderStatus @default(PENDING)
+  paymentStatus PaymentStatus @default(UNPAID)
+  paymentMethod String?     // e.g., "COD", "BKASH"
+  
+  // Financials
+  subtotal      Decimal     @db.Decimal(10, 2)
+  shippingCost  Decimal     @default(0) @db.Decimal(10, 2)
+  discount      Decimal     @default(0) @db.Decimal(10, 2)
+  total         Decimal     @db.Decimal(10, 2)
+  
+  // Relations
+  items         OrderItem[]
+  
+  // Metadata
+  notes         String?     @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id              String  @id @default(cuid())
+  orderId         String
+  order           Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  productId       String? // Nullable if product is deleted
+  product         Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  
+  productName     String  // Snapshot
+  productImage    String? // Snapshot
+  
+  quantity        Int
+  price           Decimal @db.Decimal(10, 2) // Price at time of purchase
+  
+  selectedOptions Json?   
+  
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+// Settings Model for Site-wide Configurations
+model Settings {
+  id                    String   @id @default("default")
+  insideDhakaShipping   Decimal  @default(70) @db.Decimal(10, 2)
+  outsideDhakaShipping  Decimal  @default(180) @db.Decimal(10, 2)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("settings")
+}
+
+
+model Counter {
+  name  String @id
+  count Int    @default(0)
 }

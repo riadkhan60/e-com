@@ -1,15 +1,16 @@
-"use client";
+'use client';
 
-import { motion, AnimatePresence } from "motion/react";
-import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useCart } from "@/lib/cart-context";
+import { motion, AnimatePresence } from 'motion/react';
+import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCart } from '@/lib/cart-context';
 
 function formatPrice(value: string) {
   const num = Number(value);
   if (Number.isNaN(num)) return value;
-  return `৳ ${num.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
+  return `৳ ${num.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 }
 
 interface CartDrawerProps {
@@ -18,25 +19,22 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { items, removeItem, updateQuantity, totalItems, totalPrice, clearCart } = useCart();
+  const {
+    items,
+    removeItem,
+    updateQuantity,
+    totalItems,
+    totalPrice,
+    clearCart,
+  } = useCart();
 
-  const generateWhatsAppMessage = () => {
-    if (items.length === 0) return "";
+  // Helper removed
 
-    const itemsList = items
-      .map((item) => `${item.quantity} pcs ${item.name}`)
-      .join(", ");
-
-    const message = `Hi! I want to order: ${itemsList}. Total: ${formatPrice(totalPrice)}`;
-    return encodeURIComponent(message);
-  };
+  const router = useRouter();
 
   const handleCheckout = () => {
-    const whatsappNumber = "1234567890"; // Replace with your WhatsApp number
-    const message = generateWhatsAppMessage();
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
-    
-    window.open(whatsappUrl, "_blank");
+    onClose();
+    router.push('/checkout');
   };
 
   return (
@@ -51,10 +49,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           onClick={onClose}
         >
           <motion.aside
-            initial={{ x: "100%" }}
+            initial={{ x: '100%' }}
             animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            exit={{ x: '100%' }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="flex h-full w-full max-w-md flex-col border-l bg-background shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
@@ -63,7 +61,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <div className="flex items-center gap-2">
                 <ShoppingBag className="h-5 w-5" />
                 <h2 className="text-lg font-semibold">
-                  Cart ({totalItems} {totalItems === 1 ? "item" : "items"})
+                  Cart ({totalItems} {totalItems === 1 ? 'item' : 'items'})
                 </h2>
               </div>
               <button
@@ -140,12 +138,14 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             {formatPrice(item.price)}
                           </span>
 
-                          {/* Quantity Controls */}
-                          <div className="flex items-center gap-2">
+                          <div className="flex h-8 items-center rounded-lg border">
                             <button
                               type="button"
                               onClick={() =>
-                                updateQuantity(item.id, item.quantity - 1)
+                                updateQuantity(
+                                  item.cartItemId,
+                                  item.quantity - 1,
+                                )
                               }
                               className="inline-flex h-7 w-7 items-center justify-center rounded-full border transition hover:bg-muted"
                               aria-label="Decrease quantity"
@@ -158,7 +158,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             <button
                               type="button"
                               onClick={() =>
-                                updateQuantity(item.id, item.quantity + 1)
+                                updateQuantity(
+                                  item.cartItemId,
+                                  item.quantity + 1,
+                                )
                               }
                               disabled={item.quantity >= item.stock}
                               className="inline-flex h-7 w-7 items-center justify-center rounded-full border transition hover:bg-muted disabled:opacity-50"
@@ -168,7 +171,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             </button>
                             <button
                               type="button"
-                              onClick={() => removeItem(item.id)}
+                              onClick={() => removeItem(item.cartItemId)}
                               className="ml-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-destructive/20 text-destructive transition hover:bg-destructive/10"
                               aria-label="Remove item"
                             >
@@ -201,13 +204,15 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   onClick={handleCheckout}
                   className="w-full rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition hover:bg-foreground/90"
                 >
-                  Checkout via WhatsApp
+                  Checkout
                 </button>
 
                 <button
                   type="button"
                   onClick={() => {
-                    if (window.confirm("Are you sure you want to clear the cart?")) {
+                    if (
+                      window.confirm('Are you sure you want to clear the cart?')
+                    ) {
                       clearCart();
                     }
                   }}

@@ -1,22 +1,30 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 
 export interface CartItem {
   id: string;
+  cartItemId: string; // Unique ID for this specific cart entry (variant)
   name: string;
   price: string;
   featuredImage: string | null;
   quantity: number;
   stock: number;
   categoryName?: string | null;
+  selectedOptions?: Record<string, string>;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity">) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
+  addItem: (item: Omit<CartItem, 'quantity' | 'cartItemId'>) => void;
+  removeItem: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: string;
@@ -24,7 +32,19 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const CART_STORAGE_KEY = "shilpini-cart";
+const CART_STORAGE_KEY = 'shilpini-cart';
+
+// Helper to compare options
+const optionsMatch = (
+  opts1: Record<string, string> = {},
+  opts2: Record<string, string> = {},
+) => {
+  const keys1 = Object.keys(opts1).sort();
+  const keys2 = Object.keys(opts2).sort();
+  if (keys1.length !== keys2.length) return false;
+  if (!keys1.every((key, index) => key === keys2[index])) return false;
+  return keys1.every((key) => opts1[key] === opts2[key]);
+};
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -35,9 +55,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem(CART_STORAGE_KEY);
     if (stored) {
       try {
-        setItems(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        // Ensure legacy items have cartItemId
+        const migrated = parsed.map(
+          (item: CartItem & { cartItemId?: string }) => ({
+            ...item,
+            cartItemId: item.cartItemId || crypto.randomUUID(),
+          }),
+        );
+        // eslint-disable-next-line
+        setItems(migrated);
       } catch (error) {
-        console.error("Failed to parse cart from localStorage:", error);
+        console.error('Failed to parse cart from localStorage:', error);
       }
     }
     setIsInitialized(true);
@@ -50,9 +79,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, isInitialized]);
 
-  const addItem = (newItem: Omit<CartItem, "quantity">) => {
+  const addItem = (newItem: Omit<CartItem, 'quantity' | 'cartItemId'>) => {
     setItems((prev) => {
-      const existingIndex = prev.findIndex((item) => item.id === newItem.id);
+      // Find item with same ID AND same options
+      const existingIndex = prev.findIndex(
+        (item) =>
+          item.id === newItem.id &&
+          optionsMatch(item.selectedOptions, newItem.selectedOptions),
+      );
 
       if (existingIndex > -1) {
         // Item exists, increase quantity (respecting stock)
@@ -69,30 +103,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return updated;
       } else {
         // New item, add with quantity 1
-        return [...prev, { ...newItem, quantity: 1 }];
+        return [
+          ...prev,
+          {
+            ...newItem,
+            quantity: 1,
+            cartItemId: crypto.randomUUID(),
+          },
+        ];
       }
     });
   };
 
-  const removeItem = (id: string) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+  const removeItem = (cartItemId: string) => {
+    setItems((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
   };
 
-  const updateQuantity = (id: string, quantity: number) => {
+  // Revised updateQuantity to match original pattern
+  const updateQuantity = (cartItemId: string, quantity: number) => {
     if (quantity <= 0) {
-      removeItem(id);
+      removeItem(cartItemId);
       return;
     }
-
     setItems((prev) =>
       prev.map((item) => {
-        if (item.id === id) {
-          // Respect stock limit
+        if (item.cartItemId === cartItemId) {
           const newQty = Math.min(quantity, item.stock);
           return { ...item, quantity: newQty };
         }
         return item;
-      })
+      }),
     );
   };
 
@@ -126,7 +166,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 export function useCart() {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error("useCart must be used within a CartProvider");
+    throw new Error('useCart must be used within a CartProvider');
   }
   return context;
 }

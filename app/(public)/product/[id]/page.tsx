@@ -1,16 +1,15 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import { Container } from "@/components/container";
-import { ProductImageGallery } from "@/components/product-image-gallery";
-import { ProductReviews } from "@/components/product-reviews";
-import { AddToCartButton } from "@/components/add-to-cart-button";
-import { OrderNowButton } from "@/components/order-now-button";
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Container } from '@/components/container';
+import { ProductImageGallery } from '@/components/product-image-gallery';
+import { ProductReviews } from '@/components/product-reviews';
+import { ProductDetailActions } from '@/components/product-detail-actions';
 import {
   getProductById,
   getProductReviews,
   getRelatedProducts,
-} from "@/lib/actions/product-detail";
+} from '@/lib/actions/product-detail';
 
 export const revalidate = 3600;
 
@@ -21,7 +20,7 @@ interface ProductPageProps {
 function formatPrice(value: string) {
   const num = Number(value);
   if (Number.isNaN(num)) return value;
-  return `৳ ${num.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
+  return `৳ ${num.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
@@ -30,7 +29,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     getProductById(id),
     getProductReviews(id),
     getProductById(id).then((p) =>
-      p ? getRelatedProducts(p.categoryId, id) : []
+      p ? getRelatedProducts(p.categoryId, id) : [],
     ),
   ]);
 
@@ -47,7 +46,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       ? Math.round(
           ((Number(product.comparePrice) - Number(product.price)) /
             Number(product.comparePrice)) *
-            100
+            100,
         )
       : null;
 
@@ -175,11 +174,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                       href={`/shop?collection=${collection}`}
                       className="rounded-full border bg-background px-3 py-1 text-xs font-medium transition hover:bg-muted"
                     >
-                      {collection === "NEW_ARRIVAL"
-                        ? "New Arrival"
-                        : collection === "BEST_SELL"
-                          ? "Best Seller"
-                          : "Trending"}
+                      {collection === 'NEW_ARRIVAL'
+                        ? 'New Arrival'
+                        : collection === 'BEST_SELL'
+                          ? 'Best Seller'
+                          : 'Trending'}
                     </Link>
                   ))}
                 </div>
@@ -188,27 +187,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             {/* Action Buttons */}
             <div className="space-y-3 border-t pt-6">
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <AddToCartButton
-                  product={{
-                    id: product.id,
-                    name: product.name,
-                    price: product.price.toString(),
-                    featuredImage: product.featuredImage,
-                    stock: product.stock,
-                    categoryName: product.category?.name,
-                  }}
-                  className="flex-1"
-                />
-                <OrderNowButton
-                  product={{
-                    id: product.id,
-                    name: product.name,
-                    price: product.price.toString(),
-                  }}
-                  className="flex-1"
-                />
-              </div>
+              <ProductDetailActions
+                product={{
+                  id: product.id,
+                  name: product.name,
+                  price: product.price.toString(),
+                  featuredImage: product.featuredImage,
+                  stock: product.stock,
+                  categoryName: product.category?.name,
+                  options: product.options,
+                }}
+              />
 
               <p className="text-center text-xs text-muted-foreground">
                 Free shipping on orders over ৳5,000

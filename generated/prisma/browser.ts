@@ -33,6 +33,11 @@ export type Category = Prisma.CategoryModel
  */
 export type Product = Prisma.ProductModel
 /**
+ * Model ProductOption
+ * 
+ */
+export type ProductOption = Prisma.ProductOptionModel
+/**
  * Model Review
  * 
  */
@@ -42,3 +47,23 @@ export type Review = Prisma.ReviewModel
  * 
  */
 export type SliderContent = Prisma.SliderContentModel
+/**
+ * Model Order
+ * 
+ */
+export type Order = Prisma.OrderModel
+/**
+ * Model OrderItem
+ * 
+ */
+export type OrderItem = Prisma.OrderItemModel
+/**
+ * Model Settings
+ * 
+ */
+export type Settings = Prisma.SettingsModel
+/**
+ * Model Counter
+ * 
+ */
+export type Counter = Prisma.CounterModel

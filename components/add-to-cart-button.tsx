@@ -13,7 +13,7 @@ interface AddToCartButtonProps {
     stock: number;
     categoryName?: string | null;
   };
-  variant?: "default" | "icon";
+  variant?: "default" | "icon" | "compact";
   className?: string;
 }
 
@@ -59,6 +59,28 @@ export function AddToCartButton({
         {isAdded ? (
           <>
             <Check className="h-3 w-3 text-green-600 sm:h-4 sm:w-4" />
+            <span className="text-[10px] font-medium sm:text-sm">Added</span>
+          </>
+        ) : (
+          <>
+            <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-[10px] font-medium sm:text-sm">Add</span>
+          </>
+        )}
+      </button>
+    );
+  }
+
+  if (variant === "compact") {
+    return (
+      <button
+        type="button"
+        onClick={handleAddToCart}
+        className={`inline-flex h-7 w-full items-center justify-center gap-1 rounded-full border border-foreground/20 bg-foreground/10 text-foreground transition hover:bg-foreground/20 sm:h-10 sm:gap-2 ${className}`}
+      >
+        {isAdded ? (
+          <>
+            <Check className="h-3 w-3 sm:h-4 sm:w-4" />
             <span className="text-[10px] font-medium sm:text-sm">Added</span>
           </>
         ) : (

@@ -179,6 +179,7 @@ export function ProductsGrid({
                     stock: product.stock,
                     categoryName: product.category?.name,
                   }}
+                  variant="compact"
                   className="flex-1"
                 />
                 <OrderNowButton

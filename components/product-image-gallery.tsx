@@ -73,7 +73,7 @@ export function ProductImageGallery({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4"
+            className="fixed inset-0 z-100 flex items-center justify-center bg-black/95 p-4"
             onClick={() => setIsFullscreen(false)}
           >
             {/* Close Button */}
@@ -107,7 +107,7 @@ export function ProductImageGallery({
 
             {/* Thumbnail Navigation in Fullscreen */}
             {displayImages.length > 1 && (
-              <div className="absolute bottom-4 left-1/2 z-[101] flex max-w-md -translate-x-1/2 gap-2 overflow-x-auto rounded-full bg-black/50 p-2 backdrop-blur">
+              <div className="absolute bottom-4 left-1/2 z-101 flex max-w-md -translate-x-1/2 gap-2 overflow-x-auto rounded-full bg-black/50 p-2 backdrop-blur scrollbar-hide">
                 {displayImages.map((image, index) => (
                   <button
                     key={index}

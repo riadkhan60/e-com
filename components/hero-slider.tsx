@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import { Container } from "@/components/container";
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
+import { Container } from '@/components/container';
 
 type Slide = {
   id: string;
@@ -22,19 +22,19 @@ interface HeroSliderProps {
 export function HeroSlider({ slides }: HeroSliderProps) {
   const fallbackSlides: Slide[] = [
     {
-      id: "fallback-1",
-      title: "Punjabi Elegance",
-      description: "Handpicked suits and ethnic wear for every celebration.",
-      image: "/window.svg",
-      phoneImage: "/window.svg",
-      link: "#",
-      buttonText: "Explore Collection",
+      id: 'fallback-1',
+      title: 'Punjabi Elegance',
+      description: 'Handpicked suits and ethnic wear for every celebration.',
+      image: '/window.svg',
+      phoneImage: '/window.svg',
+      link: '#',
+      buttonText: 'Explore Collection',
     },
   ];
 
   const effectiveSlides = slides.length ? slides : fallbackSlides;
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -45,11 +45,11 @@ export function HeroSlider({ slides }: HeroSliderProps) {
       setCurrentIndex(emblaApi.selectedScrollSnap());
     };
 
-    emblaApi.on("select", onSelect);
+    emblaApi.on('select', onSelect);
     onSelect();
 
     return () => {
-      emblaApi.off("select", onSelect);
+      emblaApi.off('select', onSelect);
     };
   }, [emblaApi]);
 
@@ -78,7 +78,9 @@ export function HeroSlider({ slides }: HeroSliderProps) {
       <div className="embla h-full" ref={emblaRef}>
         <div className="embla__container flex h-full">
           {effectiveSlides.map((slide) => {
-            const hasText = Boolean(slide.title || slide.description || slide.buttonText);
+            const hasText = Boolean(
+              slide.title || slide.description || slide.buttonText,
+            );
             const isPureImage = !hasText && slide.link;
 
             const slideInner = (
@@ -86,26 +88,36 @@ export function HeroSlider({ slides }: HeroSliderProps) {
                 {/* Background image per slide */}
                 <div className="absolute inset-0">
                   {/* Mobile-first image (use phoneImage if provided, else desktop image) */}
-                  <Image
-                    src={slide.phoneImage ?? slide.image}
-                    alt={slide.title ?? "Slide"}
-                    fill
-                    priority
-                    className="object-cover lg:hidden"
-                    draggable={false}
-                  />
+                  {(slide.phoneImage || slide.image) && (
+                    <Image
+                      src={
+                        slide.phoneImage && slide.phoneImage !== ''
+                          ? slide.phoneImage
+                          : slide.image
+                      }
+                      alt={slide.title ?? 'Slide'}
+                      fill
+                      priority
+                      className="object-cover lg:hidden"
+                      draggable={false}
+                    />
+                  )}
                   {/* Desktop image */}
-                  <Image
-                    src={slide.image}
-                    alt={slide.title ?? "Slide"}
-                    fill
-                    priority
-                    className="hidden object-cover lg:block"
-                    draggable={false}
-                  />
+                  {slide.image && slide.image !== '' && (
+                    <Image
+                      src={slide.image}
+                      alt={slide.title ?? 'Slide'}
+                      fill
+                      priority
+                      className="hidden object-cover lg:block"
+                      draggable={false}
+                    />
+                  )}
                   <div
                     className={`absolute inset-0 transition-colors ${
-                      hasText ? "bg-linear-to-r from-background/80 via-background/60 to-background/10" : ""
+                      hasText
+                        ? 'bg-linear-to-r from-background/80 via-background/60 to-background/10'
+                        : ''
                     }`}
                   />
                 </div>
@@ -127,7 +139,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
                     {slide.buttonText && (
                       <div className="mt-6 flex justify-center gap-3 lg:justify-start">
                         <a
-                          href={slide.link ?? "#"}
+                          href={slide.link ?? '#'}
                           className="inline-flex items-center justify-center rounded-full bg-foreground px-6 py-2 text-sm font-medium text-background transition hover:bg-foreground/90"
                         >
                           {slide.buttonText}
@@ -139,14 +151,16 @@ export function HeroSlider({ slides }: HeroSliderProps) {
                   {!isPureImage && (
                     <div className="hidden max-w-md flex-1 lg:block">
                       <div className="relative aspect-4/5 overflow-hidden rounded-3xl border bg-background/80 shadow-xl backdrop-blur">
-                        <Image
-                          src={slide.image}
-                          alt={slide.title ?? "Slide"}
-                          fill
-                          sizes="(min-width: 1024px) 400px, 0px"
-                          className="object-cover"
-                          draggable={false}
-                        />
+                        {slide.image && slide.image !== '' && (
+                          <Image
+                            src={slide.image}
+                            alt={slide.title ?? 'Slide'}
+                            fill
+                            sizes="(min-width: 1024px) 400px, 0px"
+                            className="object-cover"
+                            draggable={false}
+                          />
+                        )}
                       </div>
                     </div>
                   )}
@@ -157,7 +171,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
             return (
               <div key={slide.id} className="embla__slide min-w-full h-full">
                 {isPureImage ? (
-                  <a href={slide.link ?? "#"} className="block h-full w-full">
+                  <a href={slide.link ?? '#'} className="block h-full w-full">
                     {slideInner}
                   </a>
                 ) : (
@@ -178,7 +192,7 @@ export function HeroSlider({ slides }: HeroSliderProps) {
               type="button"
               onClick={() => goTo(index)}
               className={`h-[2px] flex-1 rounded-full transition-colors ${
-                index === currentIndex ? "bg-foreground" : "bg-muted"
+                index === currentIndex ? 'bg-foreground' : 'bg-muted'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -191,4 +205,3 @@ export function HeroSlider({ slides }: HeroSliderProps) {
     </section>
   );
 }
-

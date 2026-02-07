@@ -1,8 +1,8 @@
-import { HeroSlider } from "@/components/hero-slider";
-import HomeCollectionsSection from "@/components/home-collections-section";
-import HomeCategoriesSection from "@/components/home-categories-section";
-import HomeShowcaseReviewsSection from "@/components/home-showcase-reviews-section";
-import { getHeroSlides } from "@/lib/actions/slider";
+import { HeroSlider } from '@/components/hero-slider';
+import HomeCollectionsSection from '@/components/home-collections-section';
+import HomeCategoriesSection from '@/components/home-categories-section';
+import HomeShowcaseReviewsSection from '@/components/home-showcase-reviews-section';
+import { getHeroSlides } from '@/lib/actions/sliders';
 
 // Revalidate this page every 1 hour (ISR)
 export const revalidate = 3600;
@@ -16,7 +16,6 @@ export default async function Home() {
       <HomeCollectionsSection />
       <HomeCategoriesSection />
       <HomeShowcaseReviewsSection />
-      </main>
+    </main>
   );
 }
-
