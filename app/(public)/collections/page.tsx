@@ -1,44 +1,44 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Container } from "@/components/container";
-import { getProducts } from "@/lib/actions/products-list";
-import { AddToCartButton } from "@/components/add-to-cart-button";
-import { OrderNowButton } from "@/components/order-now-button";
+import Link from 'next/link';
+import Image from 'next/image';
+import { Container } from '@/components/container';
+import { getProducts } from '@/lib/actions/products-list';
+import { AddToCartButton } from '@/components/add-to-cart-button';
+import { OrderNowButton } from '@/components/order-now-button';
 
 export const revalidate = 3600; // ISR: revalidate every hour
 
 function formatPrice(value: string) {
   const num = Number(value);
   if (Number.isNaN(num)) return value;
-  return `৳ ${num.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
+  return `TK ${num.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 }
 
 export default async function CollectionsPage() {
   const [newArrivals, bestSellers, trending] = await Promise.all([
-    getProducts({ collection: "NEW_ARRIVAL", take: 8 }),
-    getProducts({ collection: "BEST_SELL", take: 8 }),
-    getProducts({ collection: "TRENDING", take: 8 }),
+    getProducts({ collection: 'NEW_ARRIVAL', take: 8 }),
+    getProducts({ collection: 'BEST_SELL', take: 8 }),
+    getProducts({ collection: 'TRENDING', take: 8 }),
   ]);
 
   const collections = [
     {
-      key: "NEW_ARRIVAL",
-      title: "New Arrivals",
-      description: "Discover our latest additions to the collection",
+      key: 'NEW_ARRIVAL',
+      title: 'New Arrivals',
+      description: 'Discover our latest additions to the collection',
       products: newArrivals.products,
       total: newArrivals.total,
     },
     {
-      key: "BEST_SELL",
-      title: "Best Sellers",
-      description: "Our most loved pieces, tried and trusted",
+      key: 'BEST_SELL',
+      title: 'Best Sellers',
+      description: 'Our most loved pieces, tried and trusted',
       products: bestSellers.products,
       total: bestSellers.total,
     },
     {
-      key: "TRENDING",
-      title: "Trending Now",
-      description: "What everyone is talking about",
+      key: 'TRENDING',
+      title: 'Trending Now',
+      description: 'What everyone is talking about',
       products: trending.products,
       total: trending.total,
     },
@@ -78,7 +78,7 @@ export default async function CollectionsPage() {
 
               {collection.products.length > 0 ? (
                 <>
-                  <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
                     {collection.products.map((product) => (
                       <Link
                         key={product.id}
@@ -108,24 +108,19 @@ export default async function CollectionsPage() {
                             )}
                         </div>
 
-                        <div className="flex flex-1 flex-col gap-2 p-4">
-                          {product.category && (
-                            <span className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                              {product.category.name}
-                            </span>
-                          )}
-                          <h3 className="line-clamp-2 text-base font-medium leading-tight">
+                        <div className="flex flex-1 flex-col gap-1 p-3 sm:gap-2 sm:p-4">
+                          <h3 className="line-clamp-2 text-sm font-medium leading-tight sm:text-base">
                             {product.name}
                           </h3>
 
-                          <div className="mt-auto flex items-baseline gap-2">
-                            <span className="text-lg font-semibold">
+                          <div className="mt-auto flex items-baseline gap-1 sm:gap-2">
+                            <span className="text-base font-semibold sm:text-lg">
                               {formatPrice(product.price.toString())}
                             </span>
                             {product.comparePrice &&
                               Number(product.comparePrice) >
                                 Number(product.price) && (
-                                <span className="text-sm text-muted-foreground line-through">
+                                <span className="text-xs text-muted-foreground line-through sm:text-sm">
                                   {formatPrice(product.comparePrice.toString())}
                                 </span>
                               )}
@@ -149,6 +144,9 @@ export default async function CollectionsPage() {
                                 id: product.id,
                                 name: product.name,
                                 price: product.price.toString(),
+                                featuredImage: product.featuredImage,
+                                stock: product.stock,
+                                categoryName: product.category?.name,
                               }}
                               variant="compact"
                               className="flex-1"
