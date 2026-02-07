@@ -8,8 +8,22 @@ import {
   getProductById,
   getProductReviews,
 } from '@/lib/actions/product-detail';
+import { prisma } from '@/lib/prisma';
 
 export const revalidate = 3600;
+
+// Pre-generate product pages at build time for better performance
+export async function generateStaticParams() {
+  const products = await prisma.product.findMany({
+    where: { isActive: true },
+    select: { id: true },
+    take: 50, // Pre-generate top 50 products
+  });
+
+  return products.map((product) => ({
+    id: product.id,
+  }));
+}
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
