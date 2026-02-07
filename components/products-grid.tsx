@@ -182,6 +182,9 @@ export function ProductsGrid({
                     id: product.id,
                     name: product.name,
                     price: product.price,
+                    featuredImage: product.featuredImage,
+                    stock: product.stock,
+                    categoryName: product.category?.name,
                   }}
                   variant="compact"
                   className="flex-1"
