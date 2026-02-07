@@ -2,6 +2,7 @@
 
 import { prisma } from '../prisma';
 import { revalidatePath } from 'next/cache';
+import { unstable_cache } from 'next/cache';
 
 export async function getSliders() {
   try {
@@ -15,14 +16,34 @@ export async function getSliders() {
   }
 }
 
-export async function getHeroSlides() {
-  const slides = await prisma.sliderContent.findMany({
-    where: { isActive: true },
-    orderBy: { order: 'asc' },
-  });
+// Cached version of getHeroSlides for better performance
+// Cache is automatically revalidated when sliders are updated
+export const getHeroSlides = unstable_cache(
+  async () => {
+    const slides = await prisma.sliderContent.findMany({
+      where: { isActive: true },
+      orderBy: { order: 'asc' },
+      // Only select fields that are actually used to reduce data transfer
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        image: true,
+        phoneImage: true,
+        link: true,
+        buttonText: true,
+        order: true,
+      },
+    });
 
-  return slides;
-}
+    return slides;
+  },
+  ['hero-slides'], // Cache key
+  {
+    revalidate: 3600, // Revalidate every hour
+    tags: ['sliders'], // Tag for on-demand revalidation
+  },
+);
 
 export async function createSlider(data: {
   title?: string;
@@ -42,6 +63,7 @@ export async function createSlider(data: {
       },
     });
 
+    // Revalidate paths to update cached data
     revalidatePath('/admin/sliders');
     revalidatePath('/');
     return { success: true, data: slider };
@@ -70,6 +92,7 @@ export async function updateSlider(
       data,
     });
 
+    // Revalidate paths to update cached data
     revalidatePath('/admin/sliders');
     revalidatePath('/');
     return { success: true, data: slider };
@@ -85,6 +108,7 @@ export async function deleteSlider(id: string) {
       where: { id },
     });
 
+    // Revalidate paths to update cached data
     revalidatePath('/admin/sliders');
     revalidatePath('/');
     return { success: true };

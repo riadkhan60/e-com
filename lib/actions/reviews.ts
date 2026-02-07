@@ -2,27 +2,45 @@
 
 import { prisma } from '../prisma';
 import { revalidatePath } from 'next/cache';
+import { unstable_cache } from 'next/cache';
 
-// Public function for showcase reviews (keep existing)
-export async function getShowcaseReviews(take: number = 10) {
-  const reviews = await prisma.review.findMany({
-    where: {
-      isShowcase: true,
-      isApproved: true,
-    },
-    orderBy: [
-      {
-        screnShotReviewImage: { sort: 'desc', nulls: 'last' },
+// Public function for showcase reviews - cached for performance
+export const getShowcaseReviews = unstable_cache(
+  async (take: number = 10) => {
+    const reviews = await prisma.review.findMany({
+      where: {
+        isShowcase: true,
+        isApproved: true,
       },
-      {
-        createdAt: 'desc',
+      orderBy: [
+        {
+          screnShotReviewImage: { sort: 'desc', nulls: 'last' },
+        },
+        {
+          createdAt: 'desc',
+        },
+      ],
+      // Only select fields needed for display
+      select: {
+        id: true,
+        userName: true,
+        rating: true,
+        comment: true,
+        image: true,
+        screnShotReviewImage: true,
+        source: true,
+        createdAt: true,
       },
-    ],
-    take,
-  });
+      take,
+    });
 
-  return reviews;
-}
+    return reviews;
+  },
+  ['showcase-reviews'],
+  {
+    revalidate: 3600, // Cache for 1 hour
+  },
+);
 
 // Admin: Get all reviews with optional search
 export async function getReviews(query?: string) {
