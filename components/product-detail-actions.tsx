@@ -1,8 +1,9 @@
 'use client';
 
-import { ShoppingCart, Check, MessageCircle, Minus, Plus } from 'lucide-react';
+import { ShoppingCart, Check, ShoppingBag, Minus, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useCart } from '@/lib/cart-context';
+import { toast } from 'sonner';
 
 import { useRouter } from 'next/navigation';
 
@@ -33,7 +34,6 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, string>
   >({});
-  const [error, setError] = useState<string | null>(null);
 
   const cartItem = items.find((item) => item.id === product.id);
   const currentCartQty = cartItem?.quantity || 0;
@@ -44,7 +44,6 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
       ...prev,
       [optionName]: value,
     }));
-    setError(null);
   };
 
   const handleAddToCart = () => {
@@ -55,7 +54,7 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
       );
 
       if (missingOptions.length > 0) {
-        setError(
+        toast.error(
           `Please select ${missingOptions.map((o) => o.name).join(', ')}`,
         );
         return;
@@ -105,7 +104,7 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
       );
 
       if (missingOptions.length > 0) {
-        setError(
+        toast.error(
           `Please select ${missingOptions.map((o) => o.name).join(', ')}`,
         );
         return;
@@ -138,7 +137,7 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
   if (product.stock <= 0) {
     return (
       <div className="space-y-3">
-        <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-center text-sm font-medium text-destructive">
+        <div className="rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-center text-sm font-medium text-destructive">
           Out of Stock
         </div>
         <p className="text-center text-xs text-muted-foreground">
@@ -150,29 +149,53 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
 
   return (
     <div className="space-y-6">
+      {/* Stock Status */}
+      <div className="rounded-lg border border-green-200 bg-green-50/50 px-3 py-2 dark:border-green-900/30 dark:bg-green-950/10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-600 dark:bg-green-500" />
+            <span className="text-xs font-medium text-green-900 dark:text-green-100">
+              In Stock
+            </span>
+          </div>
+          <span className="text-xs text-green-700 dark:text-green-300">
+            {availableStock} available{currentCartQty > 0 && ` · ${currentCartQty} in cart`}
+          </span>
+        </div>
+      </div>
+
       {/* Product Options */}
       {product.options && product.options.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-5">
+          <div className="border-b pb-2">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-foreground/70">
+              Select Options
+            </h3>
+          </div>
           {product.options.map((option) => (
-            <div key={option.id}>
-              <h3 className="mb-2 text-sm font-medium text-foreground">
-                {option.name}:{' '}
-                <span className="text-muted-foreground">
-                  {selectedOptions[option.name]}
-                </span>
-              </h3>
-              <div className="flex flex-wrap gap-2">
+            <div key={option.id} className="space-y-3">
+              <div className="flex items-baseline justify-between">
+                <label className="text-sm font-medium text-foreground">
+                  {option.name}
+                </label>
+                {selectedOptions[option.name] && (
+                  <span className="text-sm font-semibold text-primary">
+                    {selectedOptions[option.name]}
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2.5">
                 {option.values.map((value) => {
                   const isSelected = selectedOptions[option.name] === value;
                   return (
                     <button
                       key={value}
                       onClick={() => handleOptionSelect(option.name, value)}
-                      className={`min-w-12 rounded-lg border px-3 py-1.5 text-sm font-medium transition-all
+                      className={`min-w-14 rounded-lg border-2 px-4 py-2 text-sm font-medium transition-all duration-200
                             ${
                               isSelected
-                                ? 'border-primary bg-primary text-primary-foreground'
-                                : 'border-input bg-background hover:bg-muted text-foreground'
+                                ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+                                : 'border-border bg-card hover:border-primary/50 hover:bg-accent text-foreground'
                             }
                         `}
                     >
@@ -186,61 +209,62 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
         </div>
       )}
 
-      {error && (
-        <p className="text-sm font-medium text-destructive animate-pulse">
-          {error}
-        </p>
-      )}
-
       {/* Quantity Selector */}
-      <div>
-        <label className="mb-2 block text-sm font-medium">Quantity</label>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center rounded-lg border bg-background">
+      <div className="space-y-3">
+        <div className="border-b pb-2">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-foreground/70">
+            Quantity
+          </h3>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="inline-flex items-center rounded-lg border-2 border-border bg-card shadow-sm">
             <button
               type="button"
               onClick={decreaseQuantity}
               disabled={quantity <= 1}
-              className="inline-flex h-10 w-10 items-center justify-center transition hover:bg-muted disabled:opacity-50 sm:h-12 sm:w-12"
+              className="inline-flex h-11 w-11 items-center justify-center transition-colors hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed"
+              aria-label="Decrease quantity"
             >
               <Minus className="h-4 w-4" />
             </button>
-            <span className="w-12 text-center text-sm font-semibold sm:w-16 sm:text-base">
-              {quantity}
-            </span>
+            <div className="flex h-11 w-14 items-center justify-center border-x-2 border-border">
+              <span className="text-base font-semibold">{quantity}</span>
+            </div>
             <button
               type="button"
               onClick={increaseQuantity}
               disabled={quantity >= availableStock}
-              className="inline-flex h-10 w-10 items-center justify-center transition hover:bg-muted disabled:opacity-50 sm:h-12 sm:w-12"
+              className="inline-flex h-11 w-11 items-center justify-center transition-colors hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed"
+              aria-label="Increase quantity"
             >
               <Plus className="h-4 w-4" />
             </button>
           </div>
-          <span className="text-sm text-muted-foreground">
-            {availableStock} available
-            {currentCartQty > 0 && ` (${currentCartQty} in cart)`}
-          </span>
+          {availableStock <= 5 && availableStock > 0 && (
+            <span className="text-xs font-medium text-orange-600 dark:text-orange-400">
+              Only {availableStock} left!
+            </span>
+          )}
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex flex-col gap-3 pt-2 sm:flex-row">
         <button
           type="button"
           onClick={handleAddToCart}
           disabled={availableStock <= 0}
-          className="inline-flex py-2 flex-1 items-center justify-center gap-2 rounded-full border bg-foreground text-background transition hover:bg-foreground/90 disabled:opacity-50 sm:h-12"
+          className="inline-flex h-12  py-2 flex-1 items-center justify-center gap-2 rounded-full bg-foreground text-background font-medium transition-all hover:bg-foreground/90 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed sm:h-13"
         >
           {isAdded ? (
             <>
               <Check className="h-5 w-5" />
-              <span className="font-medium">Added to Cart</span>
+              <span>Added to Cart</span>
             </>
           ) : (
             <>
               <ShoppingCart className="h-5 w-5" />
-              <span className="font-medium">Add to Cart</span>
+              <span>Add to Cart</span>
             </>
           )}
         </button>
@@ -248,15 +272,15 @@ export function ProductDetailActions({ product }: ProductDetailActionsProps) {
         <button
           type="button"
           onClick={handleOrderNow}
-          className="inline-flex h-11 flex-1  py-2 items-center justify-center gap-2 rounded-full border border-green-600 bg-green-600 text-white transition hover:bg-green-700 sm:h-12"
+          className="inline-flex h-12 flex-1 items-center py-2 justify-center gap-2 rounded-full border-2 border-gray-300 bg-white text-foreground font-medium transition-all hover:bg-gray-50 hover:shadow-lg dark:border-gray-700 dark:bg-slate-950 dark:hover:bg-slate-900 sm:h-13"
         >
-          <MessageCircle className="h-5 w-5" />
-          <span className="font-medium">Order Now</span>
+          <ShoppingBag className="h-5 w-5" />
+          <span>Order Now</span>
         </button>
       </div>
 
       {availableStock <= 0 && (
-        <p className="text-center text-sm text-destructive">
+        <p className="text-center text-sm font-medium text-destructive">
           Cannot add more - stock limit reached
         </p>
       )}

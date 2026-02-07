@@ -108,7 +108,7 @@ export function SuccessView({ orderNumber }: SuccessViewProps) {
         className="mt-10 flex flex-col gap-4 sm:flex-row"
       >
         <Link
-          href="/shop"
+          href="/"
           className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-8 text-base font-medium text-background shadow-lg transition-all hover:bg-foreground/90 hover:shadow-xl active:scale-[0.98]"
         >
           Continue Shopping <ArrowRight className="h-4 w-4" />

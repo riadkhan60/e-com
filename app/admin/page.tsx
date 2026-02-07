@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import { prisma } from "@/lib/prisma";
 import { Package, FolderTree, MessageSquare, Image as ImageIcon } from "lucide-react";
 

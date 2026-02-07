@@ -169,7 +169,7 @@ export function CheckoutForm() {
             Delivery Location <span className="text-destructive">*</span>
           </label>
           <div className="space-y-2">
-            <label className="flex items-start gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition has-[:checked]:border-foreground has-[:checked]:bg-muted/30">
+            <label className="flex items-start gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition has-checked:border-foreground has-checked:bg-muted/30">
               <input
                 type="radio"
                 name="delivery"
@@ -187,7 +187,7 @@ export function CheckoutForm() {
                 </p>
               </div>
             </label>
-            <label className="flex items-start gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition has-[:checked]:border-foreground has-[:checked]:bg-muted/30">
+            <label className="flex items-start gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition has-checked:border-foreground has-checked:bg-muted/30">
               <input
                 type="radio"
                 name="delivery"

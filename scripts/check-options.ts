@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -9,7 +11,7 @@ async function main() {
   });
 
   console.log('Total products:', products.length);
-  const productsWithOptions = products.filter((p) => p.options.length > 0);
+  const productsWithOptions = products.filter((p: { options: string | any[]; }) => p.options.length > 0);
   console.log('Products with options:', productsWithOptions.length);
 
   if (productsWithOptions.length > 0) {

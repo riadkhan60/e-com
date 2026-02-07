@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { AddToCartButton } from "@/components/add-to-cart-button";
-import { OrderNowButton } from "@/components/order-now-button";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { AddToCartButton } from '@/components/add-to-cart-button';
+import { OrderNowButton } from '@/components/order-now-button';
 
 interface Product {
   id: string;
@@ -30,7 +30,7 @@ interface ProductsGridProps {
 function formatPrice(value: string) {
   const num = Number(value);
   if (Number.isNaN(num)) return value;
-  return `৳ ${num.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
+  return `TK ${num.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 }
 
 export function ProductsGrid({
@@ -57,7 +57,7 @@ export function ProductsGrid({
 
     try {
       const params = new URLSearchParams(searchParams.toString());
-      params.set("skip", products.length.toString());
+      params.set('skip', products.length.toString());
 
       const response = await fetch(`/api/products?${params.toString()}`);
       const data = await response.json();
@@ -65,7 +65,7 @@ export function ProductsGrid({
       setProducts((prev) => [...prev, ...data.products]);
       setHasMore(data.hasMore);
     } catch (error) {
-      console.error("Failed to load more products:", error);
+      console.error('Failed to load more products:', error);
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +79,7 @@ export function ProductsGrid({
           void loadMore();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     const currentRef = loadMoreRef.current;
@@ -118,7 +118,7 @@ export function ProductsGrid({
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
         {products.map((product) => (
           <Link
             key={product.id}
@@ -148,11 +148,6 @@ export function ProductsGrid({
             </div>
 
             <div className="flex flex-1 flex-col gap-1 p-3 sm:gap-2 sm:p-4">
-              {product.category && (
-                <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:text-xs">
-                  {product.category.name}
-                </span>
-              )}
               <h3 className="line-clamp-2 text-sm font-medium leading-tight sm:text-base">
                 {product.name}
               </h3>
