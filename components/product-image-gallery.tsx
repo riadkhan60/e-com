@@ -80,7 +80,7 @@ export function ProductImageGallery({
             <button
               type="button"
               onClick={() => setIsFullscreen(false)}
-              className="absolute right-4 top-4 z-[101] inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/50 text-white backdrop-blur transition hover:bg-black/70"
+              className="absolute right-4 top-4 z-101 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/50 text-white backdrop-blur transition hover:bg-black/70"
               aria-label="Close fullscreen"
             >
               <X className="h-5 w-5" />
