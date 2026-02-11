@@ -54,13 +54,49 @@ export function CheckoutForm() {
     }
   }, [district]);
 
+  const [phoneError, setPhoneError] = useState('');
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+
+    // Custom phone validation and formatting
+    if (name === 'phone') {
+      // Allow only numbers
+      const cleaned = value.replace(/\D/g, '');
+
+      // Limit to 11 digits
+      const truncated = cleaned.slice(0, 11);
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: truncated,
+      }));
+
+      // Validate format
+      if (truncated.length > 0) {
+        if (!truncated.startsWith('01')) {
+          setPhoneError('Phone number must start with 01');
+        } else if (
+          truncated.length >= 3 &&
+          !['3', '4', '5', '6', '7', '8', '9'].includes(truncated[2])
+        ) {
+          setPhoneError('Invalid operator code (must be 013-019)');
+        } else if (truncated.length === 11) {
+          setPhoneError('');
+        } else {
+          setPhoneError('Phone number must be 11 digits');
+        }
+      } else {
+        setPhoneError('');
+      }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const shippingCost =
@@ -78,6 +114,17 @@ export function CheckoutForm() {
 
     if (items.length === 0) {
       toast.error('Your cart is empty');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Final phone validation before submit
+    const phoneRegex = /^01[3-9]\d{8}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      setPhoneError(
+        'Please enter a valid Bangladeshi phone number (e.g., 01712345678)',
+      );
+      toast.error('Please enter a valid phone number');
       setIsSubmitting(false);
       return;
     }
@@ -189,9 +236,16 @@ export function CheckoutForm() {
                   required
                   value={formData.phone}
                   onChange={handleChange}
-                  className="flex h-12 w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
-                  placeholder="017..."
+                  className={`flex h-12 w-full rounded-lg border bg-background px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all ${
+                    phoneError
+                      ? 'border-destructive focus-visible:ring-destructive'
+                      : 'border-input'
+                  }`}
+                  placeholder="01712345678"
                 />
+                {phoneError && (
+                  <p className="text-sm text-destructive">{phoneError}</p>
+                )}
               </div>
             </div>
 
