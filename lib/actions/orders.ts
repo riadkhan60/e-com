@@ -4,7 +4,8 @@ import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend lazily or inside the action to ensure environment variables are loaded
+// in production/build mode.
 
 interface OrderItemInput {
   productId?: string;
@@ -79,9 +80,22 @@ export async function createOrder(data: CreateOrderInput) {
 
     // Send email notification
     try {
+      const apiKey = process.env.RESEND_API_KEY;
+      const sendMail = process.env.SENDMAIL;
+
+      if (!apiKey) {
+        throw new Error('RESEND_API_KEY is not defined');
+      }
+
+      if (!sendMail) {
+        throw new Error('SENDMAIL is not defined');
+      }
+
+      const resend = new Resend(apiKey);
+
       await resend.emails.send({
-        from: 'Shilpini <admin@shilpini.com>',
-        to: process.env.SENDMAIL as string,
+        from: 'Shilpini <onboarding@resend.dev>',
+        to: sendMail,
         subject: `New Order Received: ${orderNumber}`,
         html: `
           <h1>New Order Details</h1>
