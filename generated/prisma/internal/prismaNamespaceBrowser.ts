@@ -150,6 +150,7 @@ export const ReviewScalarFieldEnum = {
   image: 'image',
   screnShotReviewImage: 'screnShotReviewImage',
   source: 'source',
+  url: 'url',
   isShowcase: 'isShowcase',
   isApproved: 'isApproved',
   createdAt: 'createdAt',

@@ -35,6 +35,7 @@ export default async function EditReviewPage({ params }: PageProps) {
     image: review.image || '',
     screnShotReviewImage: review.screnShotReviewImage || '',
     source: review.source || '',
+    url: review.url || '',
     isShowcase: review.isShowcase,
     isApproved: review.isApproved,
   };

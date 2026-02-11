@@ -1,6 +1,6 @@
-import { Container } from "@/components/container";
-import { getShowcaseReviews } from "@/lib/actions/reviews";
-import { ShowcaseReviewsSlider } from "@/components/showcase-reviews-slider";
+import { Container } from '@/components/container';
+import { getShowcaseReviews } from '@/lib/actions/reviews';
+import { ShowcaseReviewsSlider } from '@/components/showcase-reviews-slider';
 
 export default async function HomeShowcaseReviewsSection() {
   const reviews = await getShowcaseReviews(10);
@@ -15,6 +15,7 @@ export default async function HomeShowcaseReviewsSection() {
     comment: r.comment,
     image: r.image,
     screnShotReviewImage: r.screnShotReviewImage,
+    url: r.url,
   }));
 
   return (
@@ -33,5 +34,3 @@ export default async function HomeShowcaseReviewsSection() {
     </section>
   );
 }
-
-

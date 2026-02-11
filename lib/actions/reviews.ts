@@ -29,6 +29,7 @@ export const getShowcaseReviews = unstable_cache(
         image: true,
         screnShotReviewImage: true,
         source: true,
+        url: true,
         createdAt: true,
       },
       take,
@@ -92,6 +93,7 @@ export async function createReview(data: {
   image?: string | null;
   screnShotReviewImage?: string | null;
   source?: string | null;
+  url?: string | null;
   isShowcase?: boolean;
   isApproved?: boolean;
 }) {
@@ -106,6 +108,7 @@ export async function createReview(data: {
         image: data.image || null,
         screnShotReviewImage: data.screnShotReviewImage || null,
         source: data.source || null,
+        url: data.url || null,
         isShowcase: data.isShowcase ?? false,
         isApproved: data.isApproved ?? false,
       },
@@ -132,6 +135,7 @@ export async function updateReview(
     image?: string | null;
     screnShotReviewImage?: string | null;
     source?: string | null;
+    url?: string | null;
     isShowcase?: boolean;
     isApproved?: boolean;
   },
@@ -151,6 +155,7 @@ export async function updateReview(
             ? data.screnShotReviewImage
             : undefined,
         source: data.source !== undefined ? data.source : undefined,
+        url: data.url !== undefined ? data.url : undefined,
         isShowcase: data.isShowcase !== undefined ? data.isShowcase : undefined,
         isApproved: data.isApproved !== undefined ? data.isApproved : undefined,
       },

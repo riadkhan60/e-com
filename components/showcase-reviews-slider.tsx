@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
 
 type ReviewCard = {
   id: string;
@@ -12,6 +12,7 @@ type ReviewCard = {
   comment: string | null;
   image: string | null;
   screnShotReviewImage: string | null;
+  url: string | null;
 };
 
 function Stars({ rating }: { rating: number }) {
@@ -21,7 +22,7 @@ function Stars({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <span
           key={i}
-          className={i < full ? "text-yellow-500" : "text-muted-foreground/40"}
+          className={i < full ? 'text-yellow-500' : 'text-muted-foreground/40'}
         >
           ★
         </span>
@@ -34,10 +35,8 @@ interface ShowcaseReviewsSliderProps {
   reviews: ReviewCard[];
 }
 
-export function ShowcaseReviewsSlider({
-  reviews,
-}: ShowcaseReviewsSliderProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+export function ShowcaseReviewsSlider({ reviews }: ShowcaseReviewsSliderProps) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
   const [isHovered, setIsHovered] = useState(false);
 
   // Autoplay: move to next slide every 5 seconds
@@ -53,7 +52,7 @@ export function ShowcaseReviewsSlider({
 
   // Debug: Check if screnShotReviewImage data is coming through
   useEffect(() => {
-    console.log("Reviews data:", reviews);
+    console.log('Reviews data:', reviews);
   }, [reviews]);
 
   if (!reviews.length) return null;
@@ -66,18 +65,15 @@ export function ShowcaseReviewsSlider({
     >
       <div className="embla" ref={emblaRef}>
         <div className="embla__container flex h-full">
-          {reviews.map((review) => (
-            <div
-              key={review.id}
-              className="embla__slide shrink-0 basis-[calc(100%-1rem)] pr-4 pl-1 md:basis-[33.333%]"
-            >
+          {reviews.map((review) => {
+            const CardContent = (
               <div className="flex h-full flex-col overflow-hidden rounded-2xl border bg-card/80 p-5 shadow-sm transition hover:shadow-md sm:p-6">
                 <div className="flex items-start gap-4">
                   {review.image && (
                     <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-muted sm:h-14 sm:w-14">
                       <Image
                         src={review.image}
-                        alt={review.userName ?? "Customer"}
+                        alt={review.userName ?? 'Customer'}
                         fill
                         className="object-cover"
                         sizes="56px"
@@ -86,12 +82,12 @@ export function ShowcaseReviewsSlider({
                   )}
                   <div className="flex flex-1 flex-col gap-1">
                     <span className="text-sm font-medium leading-tight sm:text-base">
-                      {review.userName ?? "Happy customer"}
+                      {review.userName ?? 'Happy customer'}
                     </span>
                     <span className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                      {review.source ?? "Customer"}
+                      {review.source ?? 'Customer'}
                     </span>
-                    {typeof review.rating === "number" && (
+                    {typeof review.rating === 'number' && (
                       <Stars rating={review.rating} />
                     )}
                   </div>
@@ -117,8 +113,28 @@ export function ShowcaseReviewsSlider({
                   </div>
                 )}
               </div>
-            </div>
-          ))}
+            );
+
+            return (
+              <div
+                key={review.id}
+                className="embla__slide shrink-0 basis-[calc(100%-1rem)] pr-4 pl-1 md:basis-[33.333%]"
+              >
+                {review.url ? (
+                  <a
+                    href={review.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block h-full cursor-pointer transition-shadow hover:shadow-md"
+                  >
+                    {CardContent}
+                  </a>
+                ) : (
+                  CardContent
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

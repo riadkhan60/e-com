@@ -107,6 +107,7 @@ model Review {
   image       String?  // Optional image link
   screnShotReviewImage String?
   source      String?  // Source of showcase review (e.g., "Google", "Trustpilot", etc.)
+  url         String?  // Optional external link to the review
   isShowcase  Boolean  @default(false) // true for manually uploaded showcase reviews
   isApproved  Boolean  @default(false) // Admin approval for reviews
   createdAt   DateTime @default(now())

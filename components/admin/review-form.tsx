@@ -11,7 +11,6 @@ import {
   deleteReview,
 } from '@/lib/actions/reviews';
 
-
 export interface ReviewFormData {
   productId: string;
   userName: string;
@@ -21,6 +20,7 @@ export interface ReviewFormData {
   image: string;
   screnShotReviewImage: string;
   source: string;
+  url: string;
   isShowcase: boolean;
   isApproved: boolean;
 }
@@ -52,6 +52,7 @@ export function ReviewForm({
     image: initialData?.image || '',
     screnShotReviewImage: initialData?.screnShotReviewImage || '',
     source: initialData?.source || '',
+    url: initialData?.url || '',
     isShowcase: initialData?.isShowcase ?? false,
     isApproved: initialData?.isApproved ?? false,
   });
@@ -71,6 +72,7 @@ export function ReviewForm({
         image: formData.image || null,
         screnShotReviewImage: formData.screnShotReviewImage || null,
         source: formData.source || null,
+        url: formData.url || null,
         isShowcase: formData.isShowcase,
         isApproved: formData.isApproved,
       };
@@ -240,6 +242,21 @@ export function ReviewForm({
                 setFormData({ ...formData, source: e.target.value })
               }
               placeholder="e.g., Google Reviews, Trustpilot"
+              className="w-full rounded-lg border bg-background px-4 py-2 text-sm"
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium mb-2">
+              Review URL (Optional)
+            </label>
+            <input
+              type="url"
+              value={formData.url}
+              onChange={(e) =>
+                setFormData({ ...formData, url: e.target.value })
+              }
+              placeholder="https://maps.google.com/..."
               className="w-full rounded-lg border bg-background px-4 py-2 text-sm"
             />
           </div>

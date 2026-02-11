@@ -44,6 +44,7 @@ export type ReviewMinAggregateOutputType = {
   image: string | null
   screnShotReviewImage: string | null
   source: string | null
+  url: string | null
   isShowcase: boolean | null
   isApproved: boolean | null
   createdAt: Date | null
@@ -60,6 +61,7 @@ export type ReviewMaxAggregateOutputType = {
   image: string | null
   screnShotReviewImage: string | null
   source: string | null
+  url: string | null
   isShowcase: boolean | null
   isApproved: boolean | null
   createdAt: Date | null
@@ -76,6 +78,7 @@ export type ReviewCountAggregateOutputType = {
   image: number
   screnShotReviewImage: number
   source: number
+  url: number
   isShowcase: number
   isApproved: number
   createdAt: number
@@ -102,6 +105,7 @@ export type ReviewMinAggregateInputType = {
   image?: true
   screnShotReviewImage?: true
   source?: true
+  url?: true
   isShowcase?: true
   isApproved?: true
   createdAt?: true
@@ -118,6 +122,7 @@ export type ReviewMaxAggregateInputType = {
   image?: true
   screnShotReviewImage?: true
   source?: true
+  url?: true
   isShowcase?: true
   isApproved?: true
   createdAt?: true
@@ -134,6 +139,7 @@ export type ReviewCountAggregateInputType = {
   image?: true
   screnShotReviewImage?: true
   source?: true
+  url?: true
   isShowcase?: true
   isApproved?: true
   createdAt?: true
@@ -237,6 +243,7 @@ export type ReviewGroupByOutputType = {
   image: string | null
   screnShotReviewImage: string | null
   source: string | null
+  url: string | null
   isShowcase: boolean
   isApproved: boolean
   createdAt: Date
@@ -276,6 +283,7 @@ export type ReviewWhereInput = {
   image?: Prisma.StringNullableFilter<"Review"> | string | null
   screnShotReviewImage?: Prisma.StringNullableFilter<"Review"> | string | null
   source?: Prisma.StringNullableFilter<"Review"> | string | null
+  url?: Prisma.StringNullableFilter<"Review"> | string | null
   isShowcase?: Prisma.BoolFilter<"Review"> | boolean
   isApproved?: Prisma.BoolFilter<"Review"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
@@ -292,6 +300,7 @@ export type ReviewOrderByWithRelationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   screnShotReviewImage?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
+  url?: Prisma.SortOrderInput | Prisma.SortOrder
   isShowcase?: Prisma.SortOrder
   isApproved?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -311,6 +320,7 @@ export type ReviewWhereUniqueInput = Prisma.AtLeast<{
   image?: Prisma.StringNullableFilter<"Review"> | string | null
   screnShotReviewImage?: Prisma.StringNullableFilter<"Review"> | string | null
   source?: Prisma.StringNullableFilter<"Review"> | string | null
+  url?: Prisma.StringNullableFilter<"Review"> | string | null
   isShowcase?: Prisma.BoolFilter<"Review"> | boolean
   isApproved?: Prisma.BoolFilter<"Review"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
@@ -327,6 +337,7 @@ export type ReviewOrderByWithAggregationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   screnShotReviewImage?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
+  url?: Prisma.SortOrderInput | Prisma.SortOrder
   isShowcase?: Prisma.SortOrder
   isApproved?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -351,6 +362,7 @@ export type ReviewScalarWhereWithAggregatesInput = {
   image?: Prisma.StringNullableWithAggregatesFilter<"Review"> | string | null
   screnShotReviewImage?: Prisma.StringNullableWithAggregatesFilter<"Review"> | string | null
   source?: Prisma.StringNullableWithAggregatesFilter<"Review"> | string | null
+  url?: Prisma.StringNullableWithAggregatesFilter<"Review"> | string | null
   isShowcase?: Prisma.BoolWithAggregatesFilter<"Review"> | boolean
   isApproved?: Prisma.BoolWithAggregatesFilter<"Review"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Review"> | Date | string
@@ -367,6 +379,7 @@ export type ReviewCreateInput = {
   image?: string | null
   screnShotReviewImage?: string | null
   source?: string | null
+  url?: string | null
   isShowcase?: boolean
   isApproved?: boolean
   createdAt?: Date | string
@@ -383,6 +396,7 @@ export type ReviewUncheckedCreateInput = {
   image?: string | null
   screnShotReviewImage?: string | null
   source?: string | null
+  url?: string | null
   isShowcase?: boolean
   isApproved?: boolean
   createdAt?: Date | string
@@ -399,6 +413,7 @@ export type ReviewUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screnShotReviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShowcase?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -415,6 +430,7 @@ export type ReviewUncheckedUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screnShotReviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShowcase?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -431,6 +447,7 @@ export type ReviewCreateManyInput = {
   image?: string | null
   screnShotReviewImage?: string | null
   source?: string | null
+  url?: string | null
   isShowcase?: boolean
   isApproved?: boolean
   createdAt?: Date | string
@@ -447,6 +464,7 @@ export type ReviewUpdateManyMutationInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screnShotReviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShowcase?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -463,6 +481,7 @@ export type ReviewUncheckedUpdateManyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screnShotReviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShowcase?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -479,6 +498,7 @@ export type ReviewCountOrderByAggregateInput = {
   image?: Prisma.SortOrder
   screnShotReviewImage?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  url?: Prisma.SortOrder
   isShowcase?: Prisma.SortOrder
   isApproved?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -499,6 +519,7 @@ export type ReviewMaxOrderByAggregateInput = {
   image?: Prisma.SortOrder
   screnShotReviewImage?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  url?: Prisma.SortOrder
   isShowcase?: Prisma.SortOrder
   isApproved?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -515,6 +536,7 @@ export type ReviewMinOrderByAggregateInput = {
   image?: Prisma.SortOrder
   screnShotReviewImage?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  url?: Prisma.SortOrder
   isShowcase?: Prisma.SortOrder
   isApproved?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -545,6 +567,7 @@ export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   image?: boolean
   screnShotReviewImage?: boolean
   source?: boolean
+  url?: boolean
   isShowcase?: boolean
   isApproved?: boolean
   createdAt?: boolean
@@ -561,6 +584,7 @@ export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   image?: boolean
   screnShotReviewImage?: boolean
   source?: boolean
+  url?: boolean
   isShowcase?: boolean
   isApproved?: boolean
   createdAt?: boolean
@@ -577,6 +601,7 @@ export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   image?: boolean
   screnShotReviewImage?: boolean
   source?: boolean
+  url?: boolean
   isShowcase?: boolean
   isApproved?: boolean
   createdAt?: boolean
@@ -593,13 +618,14 @@ export type ReviewSelectScalar = {
   image?: boolean
   screnShotReviewImage?: boolean
   source?: boolean
+  url?: boolean
   isShowcase?: boolean
   isApproved?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "userName" | "userEmail" | "rating" | "comment" | "image" | "screnShotReviewImage" | "source" | "isShowcase" | "isApproved" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
+export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "userName" | "userEmail" | "rating" | "comment" | "image" | "screnShotReviewImage" | "source" | "url" | "isShowcase" | "isApproved" | "createdAt" | "updatedAt", ExtArgs["result"]["review"]>
 
 export type $ReviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Review"
@@ -614,6 +640,7 @@ export type $ReviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     image: string | null
     screnShotReviewImage: string | null
     source: string | null
+    url: string | null
     isShowcase: boolean
     isApproved: boolean
     createdAt: Date
@@ -1050,6 +1077,7 @@ export interface ReviewFieldRefs {
   readonly image: Prisma.FieldRef<"Review", 'String'>
   readonly screnShotReviewImage: Prisma.FieldRef<"Review", 'String'>
   readonly source: Prisma.FieldRef<"Review", 'String'>
+  readonly url: Prisma.FieldRef<"Review", 'String'>
   readonly isShowcase: Prisma.FieldRef<"Review", 'Boolean'>
   readonly isApproved: Prisma.FieldRef<"Review", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Review", 'DateTime'>
