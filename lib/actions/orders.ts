@@ -80,7 +80,7 @@ export async function createOrder(data: CreateOrderInput) {
     // Send email notification
     try {
       await resend.emails.send({
-        from: 'Shilpini <onboarding@resend.dev>',
+        from: 'Shilpini <admin@shilpini.com>',
         to: process.env.SENDMAIL as string,
         subject: `New Order Received: ${orderNumber}`,
         html: `
