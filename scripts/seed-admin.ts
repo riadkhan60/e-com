@@ -21,7 +21,7 @@ async function main() {
     update: {},
     create: {
       email: "admin@shilpini.com",
-      password: "admin123", // Plain text password
+      password: "shilpini5432", // Plain text password
       name: "Admin User",
       role: "admin",
     },

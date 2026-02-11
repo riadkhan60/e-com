@@ -2,6 +2,9 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface OrderItemInput {
   productId?: string;
@@ -73,6 +76,50 @@ export async function createOrder(data: CreateOrderInput) {
         },
       },
     });
+
+    // Send email notification
+    try {
+      await resend.emails.send({
+        from: 'Shilpini <onboarding@resend.dev>',
+        to: process.env.SENDMAIL as string,
+        subject: `New Order Received: ${orderNumber}`,
+        html: `
+          <h1>New Order Details</h1>
+          <p><strong>Order Number:</strong> ${orderNumber}</p>
+          <p><strong>Customer Name:</strong> ${customerName}</p>
+          <p><strong>Phone:</strong> ${customerPhone}</p>
+          <p><strong>Address:</strong> ${address}</p>
+          <p><strong>Notes:</strong> ${notes || 'N/A'}</p>
+          
+          <h2>Items</h2>
+          <ul>
+            ${items
+              .map(
+                (item) => `
+              <li>
+                ${item.productName} x ${item.quantity} - ৳${item.price * item.quantity}
+                ${
+                  item.selectedOptions
+                    ? `<br/><small>${Object.entries(item.selectedOptions)
+                        .map(([k, v]) => `${k}: ${v}`)
+                        .join(', ')}</small>`
+                    : ''
+                }
+              </li>
+            `,
+              )
+              .join('')}
+          </ul>
+          
+          <p><strong>Subtotal:</strong> ৳${total - shippingCost}</p>
+          <p><strong>Shipping:</strong> ৳${shippingCost}</p>
+          <p><strong>Total:</strong> ৳${total}</p>
+        `,
+      });
+    } catch (emailError) {
+      console.error('Error sending order notification email:', emailError);
+      // We don't fail the order if the email fails, but we log it
+    }
 
     revalidatePath('/admin/orders');
     return { success: true, orderId: order.id, orderNumber: order.orderNumber };
