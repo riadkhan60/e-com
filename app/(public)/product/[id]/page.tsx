@@ -13,6 +13,7 @@ import { prisma } from '@/lib/prisma';
 import type { Metadata, ResolvingMetadata } from 'next';
 
 export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 // Dynamic Metadata Generation
 export async function generateMetadata(
