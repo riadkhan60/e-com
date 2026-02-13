@@ -157,8 +157,16 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t pt-6 text-center text-sm text-muted-foreground sm:flex-row">
           <p>&copy; {new Date().getFullYear()} Shilpini. All rights reserved.</p>
+          <div className="flex gap-6">
+            <Link href="/privacy" className="transition hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="transition hover:text-foreground">
+              Terms & Conditions
+            </Link>
+          </div>
         </div>
       </Container>
     </footer>
