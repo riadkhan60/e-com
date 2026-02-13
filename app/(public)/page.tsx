@@ -50,7 +50,7 @@ export default async function Home({ searchParams }: HomePageProps) {
       <HeroSlider slides={slides} />
 
       {/* Products Section */}
-      <section className="md:py-12 py-8">
+      <section id="products" className="md:py-12 py-8">
         <Container>
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">

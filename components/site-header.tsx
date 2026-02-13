@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
 import { CartDrawer } from '@/components/cart-drawer';
@@ -11,6 +11,12 @@ import Image from 'next/image';
 export function SiteHeader() {
   const [cartOpen, setCartOpen] = useState(false);
   const { totalItems } = useCart();
+
+  useEffect(() => {
+    const handler = () => setCartOpen(true);
+    window.addEventListener('open-cart', handler);
+    return () => window.removeEventListener('open-cart', handler);
+  }, []);
 
   return (
     <>
