@@ -6,6 +6,8 @@ import { AddToCartButton } from '@/components/add-to-cart-button';
 import { OrderNowButton } from '@/components/order-now-button';
 
 export const revalidate = 3600; // ISR: revalidate every hour
+// Prevent static prerender at build so product.count() runs at runtime (avoids P2022 with driver adapter)
+export const dynamic = 'force-dynamic';
 
 function formatPrice(value: string) {
   const num = Number(value);
