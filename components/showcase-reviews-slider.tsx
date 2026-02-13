@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { ExternalLink } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 
@@ -50,11 +51,6 @@ export function ShowcaseReviewsSlider({ reviews }: ShowcaseReviewsSliderProps) {
     return () => clearInterval(id);
   }, [emblaApi, isHovered]);
 
-  // Debug: Check if screnShotReviewImage data is coming through
-  useEffect(() => {
-    console.log('Reviews data:', reviews);
-  }, [reviews]);
-
   if (!reviews.length) return null;
 
   return (
@@ -67,7 +63,18 @@ export function ShowcaseReviewsSlider({ reviews }: ShowcaseReviewsSliderProps) {
         <div className="embla__container flex h-full">
           {reviews.map((review) => {
             const CardContent = (
-              <div className="flex h-full flex-col overflow-hidden rounded-2xl border bg-card/80 p-5 shadow-sm transition hover:shadow-md sm:p-6">
+              <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border bg-card/80 p-5 shadow-sm transition hover:shadow-md sm:p-6">
+                {review.url && (
+                  <a
+                    href={review.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border bg-background text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                    aria-label="View review"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                )}
                 <div className="flex items-start gap-4">
                   {review.image && (
                     <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-muted sm:h-14 sm:w-14">
@@ -120,18 +127,7 @@ export function ShowcaseReviewsSlider({ reviews }: ShowcaseReviewsSliderProps) {
                 key={review.id}
                 className="embla__slide shrink-0 basis-[calc(100%-1rem)] pr-4 pl-1 md:basis-[33.333%]"
               >
-                {review.url ? (
-                  <a
-                    href={review.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block h-full cursor-pointer transition-shadow hover:shadow-md"
-                  >
-                    {CardContent}
-                  </a>
-                ) : (
-                  CardContent
-                )}
+                {CardContent}
               </div>
             );
           })}
